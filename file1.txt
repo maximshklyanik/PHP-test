@@ -1,0 +1,49 @@
+<?php
+/**
+Класс для работы с базой данных людей
+Класс имеет методы:
+Сохранение полей экземпляра класса в БД;
+Удаление человека из БД в соответствии с id объекта;
+Static преобразование даты рождения в возраст (полных лет);
+Static преобразование пола из двоичной системы в текстовую (муж,
+жен);
+Конструктор класса либо создает человека в БД с заданной
+информацией, либо берет информацию из БД по id (предусмотреть
+валидацию данных);
+*/
+class Man
+{
+	public $id, $name, $surname, $date, $birthday, $gender, $city_of_birth;
+	
+	function saveInformation($id, $name, $surname, $date, $birthday, $gender, $city_of_birth){
+		$strSQL = "INSERT INTO 'man' values ('$id', '$name', '$surname', '$date', '$birthday', '$gender', '$city_of_birth')";												
+	}
+	
+	function deleteMan($id){
+		if (is_numeric($id)){												
+			$query = "DELETE FROM 'man' WHERE 'id' = '$id' ";											
+		} 												
+	}
+	
+	static function getAge($birthday){
+		$diff = date( 'Ymd' ) - date( 'Ymd', strtotime($birthday) );
+		return substr( $diff, 0, -4 );
+	}
+	
+	static function genderTransformation($gender){
+		for($i=0;$i<strlen($gender);$i++){
+			$number = decbin(ord($gender[$i]));
+		}
+		$res = strval($number);
+		return $res;
+	}
+	
+	public function __construct($id, $name, $surname, $date, $birthday, $gender, $city_of_birth)
+	{
+		if (!isset($id)){
+			$strSQL = "INSERT INTO 'man' values ('$id', '$name', '$surname', '$date', '$birthday', '$gender', '$city_of_birth')";
+		}
+	}
+	
+}
+?>
